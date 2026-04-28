@@ -86,9 +86,11 @@ set(CPACK_PACKAGE_VERSION ${PRINT_VERSION})
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/DESCRIPTION)
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "static C++ library for printing")
 
+set(CPACK_RESOURCE_FILE_LICENSE ${CMAKE_CURRENT_SOURCE_DIR}/LICENSE)
 set(CPACK_RESOURCE_FILE_README ${CMAKE_CURRENT_SOURCE_DIR}/README.md)
 
 set(CPACK_RPM_PACKAGE_NAME "print-devel")
+set(CPACK_RPM_PACKAGE_LICENSE "MIT")
 set(CPACK_RPM_PACKAGE_GROUP "print")
 set(CPACK_RPM_CHANGELOG_FILE ${CMAKE_CURRENT_SOURCE_DIR}/ChangeLog.md)
 set(CPACK_RPM_PACKAGE_RELEASE 1)
@@ -96,6 +98,7 @@ set(CPACK_RPM_PACKAGE_RELEASE 1)
 set(CPACK_DEBIAN_PACKAGE_NAME "libprint-dev")
 set(CPACK_DEBIAN_PACKAGE_PREDEPENDS "cmake >= 3.0")
 set(CPACK_DEBIAN_PACKAGE_RELEASE 1)
+
 
 include(CPack)
 ```
@@ -115,3 +118,34 @@ $ git commit -m"added cpack config"
 $ git tag v0.1.0.0
 $ git push origin main --tags
 ```
+
+Теперь сбилдим проект и создадим архив нашего релиза:
+```sh
+$ cmake -H. -B build
+$ cmake --build  build
+$ cd build
+$ cpack -G "TGZ"
+$ cd ..
+```
+Или индетично и даже удобнее:
+```sh
+$ cmake -H. -B build -DCPACK_GENERATOR="TGZ"
+$ cmake --build build --target package
+```
+
+На последок создаем папку с артифактами и перемещаем туда созданные архивы:
+```sh
+$ mkdir artifacts
+$ mv build/*.tar.gz artifacts
+```
+
+И посмотрим на дерево этой папки
+```sh
+$ tree artifacts
+```
+artifacts/
+└── print-0.1.0.0-Linux.tar.gz
+
+0 directories, 1 file
+```
+Ахрив появился, а это значит, что можно отправлять это на гитхаб.
